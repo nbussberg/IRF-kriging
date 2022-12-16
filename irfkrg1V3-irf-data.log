@@ -1,0 +1,103 @@
+
+> # R version
+> R.version.string
+[1] "R version 4.2.1 (2022-06-23)"
+
+> ### 00 Load functions
+> 
+> source(file = "irfkrg-fcn01V3-sphere-harmonics.R")
+
+> source(file = "irfkrg-fcn02V3-legendre-polynomials.R")
+
+> source(file = "irfkrg-fcn03V3-distance.R")
+
+> source(file = "irfkrg-fcn04V3-icf.R")
+
+> source(file = "irfkrg-fcn05V3-MoM-estimator.R")
+
+> source(file = "irfkrg-fcn06V3-order-approx.R")
+
+> library(fields)   # needed for image.plot()
+
+> library(maptools) # needed for wrld_simpl map - requires package sp
+
+> library(akima)    # for interp()
+
+> ### 01 Initial setup
+> 
+> user.seed <- 1115    # random seed to investigate
+
+> r <- 0.75
+
+> P <- 1500
+
+> # set distance bins
+> H <- 10         # Number Distances at Which to Estimate
+
+> eps <- .10      # Use to Bin Distances in Estimation
+
+> Hvec <- as.vector(seq(0,1,by = 1/H))[1:H]
+
+> ## Create tau matrices to test
+> # matrix values are lat, long
+> 
+> tau2 <- matrix(c(pi/9,  pi/3,
++                  pi/3,  5*pi/6, 
++               .... [TRUNCATED] 
+
+> tau3 <- matrix(c(pi/12, pi/6,
++                  pi/9,  pi/3, # from k=2 tau1
++                  pi/6,  2*pi/3,
++                  pi/3,  5*pi/6, #  .... [TRUNCATED] 
+
+> ## Create corresponding A matrices (see Shields 2017)
+> 
+> A2 <- solve(matrix(c(apply(tau2,1,Y00),
++                      apply(tau2,1,Y1n1),
++      .... [TRUNCATED] 
+
+> A3 <- solve(matrix(c(apply(tau3,1,Y00),
++                      apply(tau3,1,Y1n1),
++                      apply(tau3,1,Y10),
++                       .... [TRUNCATED] 
+
+> ## Create location matrix
+> 
+> set.seed(user.seed)
+
+> Lmat.1 <- matrix(runif(P*2,0,1),ncol=2)
+
+> Lmat.1[,1] <- Lmat.1[,1]*pi #lat
+
+> Lmat.1[,2] <- Lmat.1[,2]*2*pi #lon
+
+> Lmat <- Lmat.1
+
+> saveRDS(Lmat, paste("Data/", filename, "-Lmat.Rds", sep = ""))
+
+> ## Create distance vector
+> Dvec <- Dfun(Lmat, P)
+
+> ### 02 run loop to generate ud and Gmat
+> 
+> G.mat.k <- list()
+
+> G.index <- 1
+
+> kappa.vec <- c(2, 3)
+
+> for(k in 1:length(kappa.vec)){
++     
++     kappa <- kappa.vec[k]
++     
++     # Compute Cmat
++     Cmat <- matrix(0, P, P)
++     for (i in 1:P) {
++ .... [TRUNCATED] 
+
+> ## 03 Save G matrices
+> 
+> saveRDS(G.mat.k, paste("Data/", filename, "-Gmat.Rds", sep = ""))
+
+> # close log
+> sink()

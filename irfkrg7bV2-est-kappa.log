@@ -1,0 +1,71 @@
+
+> # R version
+> R.version.string
+[1] "R version 4.2.1 (2022-06-23)"
+
+> ### 00 Load packages and functions
+> 
+> library(fields)   # needed for image.plot()
+
+> library(sp)       # needed for coordinates, SpatialPointsDataFrame
+
+> library(maptools) # needed for wrld_simpl map
+
+> library(geoR) # for as.geodata()
+
+> library(akima) # for interp()
+
+> source(file = "irfkrg-fcn01V3-sphere-harmonics.R")
+
+> source(file = "irfkrg-fcn02V3-legendre-polynomials.R")
+
+> source(file = "irfkrg-fcn03V3-distance.R")
+
+> source(file = "irfkrg-fcn04V3-icf.R")
+
+> source(file = "irfkrg-fcn05V3-MoM-estimator.R")
+
+> source(file = "irfkrg-fcn06V3-order-approx.R")
+
+> source(file = "irfkrg-fcn07V4-criteria.R")
+
+> ###  01 Load data
+> 
+> Lmat <- readRDS("Data/irfkrg7aV2-parse-data-Lmat.Rds")
+
+> data(wrld_simpl)
+
+> # Set bin distances
+> H <- 10                   # Number Distances at Which to Estimate
+
+> eps <- 0.1                # Use to Bin Distances in Estimation
+
+> Hvec <- as.vector(seq(0,1,by = 1/H))[1:H]
+
+> P <- dim(Lmat)[[1]]
+
+> Dvec <- readRDS("Data/irfkrg7aV2-parse-data-Dvec.Rds")
+
+> # Load data
+> 
+> full.data <- readRDS(paste("Data/irfkrg7aV2-parse-data-2015.Rds", sep = ""))
+
+> # Select Jan and Apr from 2015 for this study
+> 
+> JanApr.data <- full.data[,c(3,6)]
+
+> ### 02 Estimate kappa for each month, plot criterion plots
+> 
+> kappa.vec <- rep(NA, 2)
+
+> for(month in 1:2){
++     month.data <- JanApr.data[,month]
++     if(month==1) month.lab <- "Jan"
++     if(month==2) month.lab <- "Apr"
++     
++      .... [TRUNCATED] 
+[1] "Kappa-hat for Jan: 2"
+[1] "Kappa-hat for Apr: 2"
+
+> # close log
+> sink()
