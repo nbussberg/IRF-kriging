@@ -1,0 +1,250 @@
+
+> # R version
+> R.version.string
+[1] "R version 4.3.2 (2023-10-31)"
+
+> ### 00 Load functions
+> 
+> source(file = "irf-fcn01-sphere-harmonics.R")
+
+> source(file = "irf-fcn02-legendre-polynomials.R")
+
+> source(file = "irf-fcn03-distance.R")
+
+> source(file = "irf-fcn04-covariances.R")
+
+> source(file = "irf-fcn05-MoM-estimator.R")
+
+> source(file = "irf-fcn06-kappa-approx.R")
+
+> ### 01 Load data
+> 
+> Lmat <- readRDS("data/irfkrg1-data-r-sig-model-Lmat.Rds")
+
+> ud <- readRDS("data/irfkrg1-data-r-sig-model-ud-k2.Rds")
+
+> # Parameters of ICF
+> H <- 10                   # Number Distances at Which to Estimate
+
+> eps <- .10                # Use to Bin Distances in Estimation
+
+> Hvec <- as.vector(seq(0,1,by = 1/H))[1:H]
+
+> P <- 1500
+
+> Dvec <- Dfun(Lmat, P)
+
+> ### 02 Generate simulations, estimate kappa for each
+> 
+> nsim <- 1000
+
+> crit.1.nsim <- matrix(0,nsim,7)
+
+> crit.2.nsim <- matrix(0,nsim,7)
+
+> set.seed(3845)
+
+> for(isim in 1:nsim){
++     if(isim%%10 ==0) print(isim)
++     
++     data.X0 <- ud %*% matrix(rnorm(P,0,1),P,1)
++ 
++     Gmat.GN <- order.approx(dat .... [TRUNCATED] 
+[1] 10
+[1] 20
+[1] 30
+[1] 40
+[1] 50
+[1] 60
+[1] 70
+[1] 80
+[1] 90
+[1] 100
+[1] 110
+[1] 120
+[1] 130
+[1] 140
+[1] 150
+[1] 160
+[1] 170
+[1] 180
+[1] 190
+[1] 200
+[1] 210
+[1] 220
+[1] 230
+[1] 240
+[1] 250
+[1] 260
+[1] 270
+[1] 280
+[1] 290
+[1] 300
+[1] 310
+[1] 320
+[1] 330
+[1] 340
+[1] 350
+[1] 360
+[1] 370
+[1] 380
+[1] 390
+[1] 400
+[1] 410
+[1] 420
+[1] 430
+[1] 440
+[1] 450
+[1] 460
+[1] 470
+[1] 480
+[1] 490
+[1] 500
+[1] 510
+[1] 520
+[1] 530
+[1] 540
+[1] 550
+[1] 560
+[1] 570
+[1] 580
+[1] 590
+[1] 600
+[1] 610
+[1] 620
+[1] 630
+[1] 640
+[1] 650
+[1] 660
+[1] 670
+[1] 680
+[1] 690
+[1] 700
+[1] 710
+[1] 720
+[1] 730
+[1] 740
+[1] 750
+[1] 760
+[1] 770
+[1] 780
+[1] 790
+[1] 800
+[1] 810
+[1] 820
+[1] 830
+[1] 840
+[1] 850
+[1] 860
+[1] 870
+[1] 880
+[1] 890
+[1] 900
+[1] 910
+[1] 920
+[1] 930
+[1] 940
+[1] 950
+[1] 960
+[1] 970
+[1] 980
+[1] 990
+[1] 1000
+
+> ### 03 Plot kappa estimates on histogram
+> 
+> # Version 1: set alpha (penalty term) to 0.5
+> crit.3.nsim <- crit.2.nsim
+
+> crit.4.nsim <- rep(0,nsim)
+
+> for(isim in 1:nsim){
++     value.max <- which.max(crit.2.nsim[isim,])
++     crit.3.nsim[isim,] <- crit.2.nsim[isim,]+0.5*(0:6)
++     crit.4.nsim[isi .... [TRUNCATED] 
+
+> table(crit.4.nsim)
+crit.4.nsim
+  1   2   3   4   5 
+  2   5 848 143   2 
+
+> pdf(file = paste("graphs/", filename, "-alpha_half.pdf", sep = ""))
+
+> par(las=1, mar=c(5,4,0,0))
+
+> hist(crit.4.nsim, breaks = seq(0, 7),
++      xlab='Order', main="",
++      xaxt="n", ylim = c(0, 1000))
+
+> axis(side=1, c(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5), 
++      labels = c(0, 1, 2, 3, 4, 5, 6),
++      line=0)
+
+> dev.off()
+null device 
+          1 
+
+> # Version 2: set alpha (penalty term) to 0.2
+> crit.5.nsim <- crit.2.nsim
+
+> crit.6.nsim <- rep(0,nsim)
+
+> for(isim in 1:nsim){
++   value.max <- which.max(crit.2.nsim[isim,])
++   crit.5.nsim[isim,] <- crit.2.nsim[isim,]+0.2*(0:6)
++   crit.6.nsim[isim] <-  .... [TRUNCATED] 
+
+> table(crit.6.nsim)
+crit.6.nsim
+  1   2   3   4   5   6 
+  1   4 690 303   1   1 
+
+> pdf(file = paste("graphs/", filename, "-alpha_fifth.pdf", sep = ""))
+
+> par(las=1, mar=c(5,4,0,0))
+
+> hist(crit.6.nsim, breaks = seq(0, 7),
++      xlab='Order', main="",
++      xaxt="n", ylim = c(0, 1000))
+
+> axis(side=1, c(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5), 
++      labels = c(0, 1, 2, 3, 4, 5, 6),
++      line=0)
+
+> dev.off()
+null device 
+          1 
+
+> # Version 3: set alpha (penalty term) to 1.5
+> crit.7.nsim <- crit.2.nsim
+
+> crit.8.nsim <- rep(0,nsim)
+
+> for(isim in 1:nsim){
++   value.max <- which.max(crit.2.nsim[isim,])
++   crit.7.nsim[isim,] <- crit.2.nsim[isim,]+1.5*(0:6)
++   crit.8.nsim[isim] <-  .... [TRUNCATED] 
+
+> table(crit.8.nsim)
+crit.8.nsim
+  1   2   3   4   5 
+  6  23 933  36   2 
+
+> pdf(file = paste("graphs/", filename, "-alpha_one+half.pdf", sep = ""))
+
+> par(las=1, mar=c(5,4,0,0))
+
+> hist(crit.8.nsim, breaks = seq(0, 7),
++      xlab='Order', main="",
++      xaxt="n", ylim = c(0, 1000))
+
+> axis(side=1, c(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5), 
++      labels = c(0, 1, 2, 3, 4, 5, 6),
++      line=0)
+
+> dev.off()
+null device 
+          1 
+
+> # close log
+> sink()

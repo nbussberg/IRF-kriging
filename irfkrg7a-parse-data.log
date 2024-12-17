@@ -1,0 +1,61 @@
+
+> # R version
+> R.version.string
+[1] "R version 4.3.2 (2023-10-31)"
+
+> ### 1 Load functions
+> 
+> source(file = "irf-fcn03-distance.R")
+
+> source(file = "irf-fcn09-parse-data.R")
+
+> ### 2 Create matrix to store results
+> 
+> # convert lat/long degrees to radians
+> latitude <- (seq(-88.75,88.75,2.5))*(pi/180)
+
+> latitude <- latitude + pi/2 # switch range to 0 to pi
+
+> longitude <- (seq(-178.75,178.75,2.5))*(pi/180)
+
+> num.cols <- length(latitude)    # should be 72
+
+> num.rows <- length(longitude)   # should be 144
+
+> # create matrix of locations
+> Lmat <- matrix(c(kronecker(latitude,rep(1,num.rows)),
++                     rep(longitude,num.cols)), num.cols * num. .... [TRUNCATED] 
+
+> # In data, each lat value is repeated 144 times in order with corresponding long
+> 
+> # Store Lmat
+> saveRDS(Lmat, file = paste("data/",filename,"-L ..." ... [TRUNCATED] 
+
+> ## 3 Load data from directory, parse the data into new format, save as txt file
+> 
+> # create matrix to store temp anomalies 
+> # 1 col for each mon .... [TRUNCATED] 
+
+> colnames(loc.data) <- c("latitude", "longitude", "01", "02", "03", "04",
++                         "05", "06", "07", "08", "09", "10", "11", "12")
+
+> # create vector of years of where there is data
+> # For this study, only 2015 was needed
+> # Note: datasets must start in January (month=01).
+> year .... [TRUNCATED] 
+
+> for (i in 1:length(years)){
++   data.name <- paste("data/tltmonamg.", years[i], "_5.6", sep = "")
++   temp.data <- parse.data(data.name, loc.data)
++ .... [TRUNCATED] 
+
+> ### 4 Compute distance vector (Dvec)
+> 
+> P <- length(Lmat[,1])
+
+> Dvec <- Dfun(Lmat, P)
+
+> saveRDS(Dvec, file=paste("data/", filename, "-Dvec.Rds", sep = ""))
+
+> # close log
+> sink()
